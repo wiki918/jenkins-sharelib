@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    qa: java
+spec:
+  containers:
+  - name: jnlp
+    image: registry.4paradigm.com/tester_jenkins_slave
+    imagePullPolicy: Always
+    env:
+      - name: TZ
+        value: "Asia/Shanghai"
+    volumeMounts:
+      - mountPath: "/mnt"
+        name: "chromedownload"
+      - mountPath: "/etc/localtime"
+        name: "host-time"
+  volumes:
+    - name: "host-time"
+      hostPath:
+        path: "/etc/localtime"
+    - name: "chromedownload"
+      nfs:
+        server: 172.27.128.122
+        path: "/home/nfs-share"
+  imagePullSecrets:
+    - name: docker4paradigm
